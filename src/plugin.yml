@@ -1,0 +1,5 @@
+name: HungerCore
+version: 0.0.1
+author: YB
+main: me.yb.hungercore.EventHandle
+description: Hunger² Gamemode Core
