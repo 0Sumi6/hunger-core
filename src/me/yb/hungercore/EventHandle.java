@@ -11,17 +11,30 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EventHandle extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
+        String prefix = "[HC] ";
         System.out.println("HungerCore successfully started!");
         getServer().getPluginManager().registerEvents(this, this);
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+        }
+        File config = new File(getDataFolder(), "config.yml");
+        if (!config.exists()) {
+            System.out.println(prefix + "Creating new config.yml file");
+            saveDefaultConfig();
+        } else {
+            System.out.println(prefix + "Loading config.yml file");
+        }
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
                 for (Player p : Bukkit.getServer().getOnlinePlayers()) {
