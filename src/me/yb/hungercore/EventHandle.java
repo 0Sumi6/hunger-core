@@ -10,13 +10,17 @@ import org.bukkit.Sound;
 import org.bukkit.*;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class EventHandle extends JavaPlugin implements Listener {
@@ -54,7 +58,6 @@ public class EventHandle extends JavaPlugin implements Listener {
         Bukkit.getServer().getWorlds().get(0).setGameRuleValue("doMobGriefing", "false");
         Bukkit.getServer().getWorlds().get(0).setGameRuleValue("naturalRegeneration", "false");
         // Initialize variables
-        // TODO : Set "baseTemp" to val from data.yml
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
             public void run() {
                 for (Player p : Bukkit.getServer().getOnlinePlayers()) {
@@ -106,7 +109,7 @@ public class EventHandle extends JavaPlugin implements Listener {
                 if (loot <= 5) {
                     item = new ItemStack(Material.APPLE);
                     meta = item.getItemMeta();
-                    meta.setDisplayName("§a« §2Crunchy Apple§a »");;
+                    meta.setDisplayName("§a« §2Crunchy Apple§a »");
                     item.setItemMeta(meta);
                     p.playSound(l, Sound.ENTITY_CHICKEN_EGG, 1F, 1F);
                 }
@@ -199,7 +202,9 @@ public class EventHandle extends JavaPlugin implements Listener {
         if (gm != GameMode.CREATIVE) {
             e.setCancelled(true);
             if (e.getPlayer().isSneaking()) {
+                // Create inventory
                 Inventory inv = Bukkit.createInventory(null, 54, "§b« §3Crafting§b »");
+                List<String> lore = new ArrayList<>();
                 ItemStack item = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)15);
                 ItemMeta meta = item.getItemMeta();
                 meta.setDisplayName("§a");
@@ -212,7 +217,7 @@ public class EventHandle extends JavaPlugin implements Listener {
                         i++;
                     }
                 }
-                item = new ItemStack(Material.STAINED_GLASS_PANE, 1);
+                item = new ItemStack(Material.STAINED_GLASS_PANE);
                 meta = item.getItemMeta();
                 meta.setDisplayName("§a");
                 item.setItemMeta(meta);
@@ -236,7 +241,85 @@ public class EventHandle extends JavaPlugin implements Listener {
                         i++;
                     }
                 }
+                // Consumables
+                item = new ItemStack(Material.APPLE);
+                lore.add("§7» §oConsumable items such as food and drinks.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§a« §2Consumables§a »");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItem(10, item);
+                lore.clear();
+                // Tools
+                item = new ItemStack(Material.WOOD_PICKAXE);
+                lore.add("§7» §oPickaxes, axes, shovels and more.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§6« §eTools§6 »");
+                meta.setLore(lore);
+                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                item.setItemMeta(meta);
+                inv.setItem(11, item);
+                lore.clear();
+                // Weapons
+                item = new ItemStack(Material.WOOD_SWORD);
+                lore.add("§7» §oDeadly weapons to cut down animals and enemies.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§4« §cWeapons§4 »");
+                meta.setLore(lore);
+                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                item.setItemMeta(meta);
+                inv.setItem(12, item);
+                lore.clear();
+                // Structures
+                item = new ItemStack(Material.SMOOTH_BRICK);
+                lore.add("§7» §oBlocks to build and decorate your base with.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§1« §9Structures§1 »");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItem(13, item);
+                lore.clear();
+                // Clothing
+                item = new ItemStack(Material.LEATHER_CHESTPLATE);
+                lore.add("§7» §oWearable items to protect you and change your stats.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§8« §7Clothing§8 »");
+                meta.setLore(lore);
+                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+                item.setItemMeta(meta);
+                inv.setItem(14, item);
+                lore.clear();
+                // Medical
+                item = new ItemStack(Material.PAPER);
+                lore.add("§7» §oConsumable items that heal you and give temporary boosts.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§c« §fMedical§c »");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItem(15, item);
+                lore.clear();
+                // Forging
+                item = new ItemStack(Material.ANVIL);
+                lore.add("§7» §oMaking materials out of materials.");
+                meta = item.getItemMeta();
+                meta.setDisplayName("§b« §3Forging§b »");
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+                inv.setItem(16, item);
+                lore.clear();
+                // Display inventory to player
                 e.getPlayer().openInventory(inv);
+            }
+        }
+    }
+    @EventHandler
+    public void onInvClick(InventoryClickEvent e) {
+        GameMode gm = e.getWhoClicked().getGameMode();
+        if (gm != GameMode.CREATIVE) {
+            if (e.getClickedInventory() != null) {
+                if (e.getClickedInventory().getTitle().equals("§b« §3Crafting§b »")) {
+                    e.setCancelled(true);
+                }
             }
         }
     }
