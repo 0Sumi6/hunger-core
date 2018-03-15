@@ -319,8 +319,27 @@ public class EventHandle extends JavaPlugin implements Listener {
             if (e.getClickedInventory() != null) {
                 if (e.getClickedInventory().getTitle().equals("§b« §3Crafting§b »")) {
                     e.setCancelled(true);
+                    if (e.getClickedInventory().getTitle().equals("§6« §eTools§6 »")) {
+                        if (e.getClickedItem().getItemMeta().getDisplayName().equals("§6« §eMakeshift Pickaxe§6 »") {
+                            ItemStack item = new ItemStack(Material.WOOD_PICKAXE);
+                            ItemMeta meta = item.getItemMeta();
+                            meta.setDisplayName("§6« §eMakeshift Pickaxe§6 »");
+                            item.setItemMeta(meta);
+                            craftItem(item, 1, 15000, e);
+                            // TODO : Add lore to item
+                        }
+                    }
                 }
             }
         }
+    }
+    public void craftItem(ItemStack item, int quantity, int time, InventoryClickEvent e) {
+        e.getWhoClicked().playSound(e.getWhoClicked().getLocation(), Sound.BLOCK_ANVIL_USE, 1F, 1F);
+        try {
+            Thread.sleep(time);
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        e.getWhoClicked.getLocation.dropItem(item, quantity);
     }
 }
